@@ -89,4 +89,24 @@ public class Player : MonoBehaviour
 
         cantShot = false;
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        switch(other.gameObject.tag)
+        {
+            case "PlatformMovement":
+                transform.parent = other.transform;
+                break;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        switch (other.gameObject.tag)
+        {
+            case "PlatformMovement":
+                transform.parent = null;
+                break;
+        }
+    }
 }

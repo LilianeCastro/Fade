@@ -18,22 +18,25 @@ public class PlayerFireSpecial : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetButton("Fire2")  && Input.GetKeyDown(KeyCode.S) && !isSpecialUse)
+        if(Input.GetButtonDown("Fire2") && !isSpecialUse)
         {
             isSpecialUse = true;
 
-            GameObject shotSpecial = Instantiate(GameControllerFire.Instance.shotPrefab, posSpawnSpecial);
+            GameObject shotSpecial = Instantiate(GameControllerFire.Instance.shotPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
             shotSpecial.TryGetComponent(out Rigidbody2D shotRb);
 
             shotRb.AddForce(Vector2.down * speedShot, ForceMode2D.Impulse);
+
+            playerRb.velocity = Vector2.zero;
             playerRb.AddForce(Vector2.up * forcePlayerImpulse, ForceMode2D.Force);
+
             StartCoroutine("DelaySpecialToUseAgain");
         }
     }
 
     IEnumerator DelaySpecialToUseAgain()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         isSpecialUse = false;
     }
 }
