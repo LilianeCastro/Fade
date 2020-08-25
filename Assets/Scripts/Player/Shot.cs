@@ -9,10 +9,4 @@ public class Shot : MonoBehaviour
     {
         Destroy(this.gameObject, 5f);
     }
-
-    void Update()
-    {
-        print(transform.position.y);
-    }
-
 }

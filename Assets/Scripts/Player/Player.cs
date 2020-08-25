@@ -100,9 +100,7 @@ public class Player : MonoBehaviour
                 break;
 
             case "ObjectDamage":
-
-                StartCoroutine("Respawn");
-                //GameControllerFire.Instance.Death();
+                UpdateHp(-1);
                 break;
         }
     }
@@ -112,7 +110,6 @@ public class Player : MonoBehaviour
         switch (other.gameObject.tag)
         {
             case "PlatformMovement":
-
                 transform.parent = null;
                 break;
         }
@@ -125,21 +122,13 @@ public class Player : MonoBehaviour
         switch (other.gameObject.tag)
         {
             case "Enemy":
-
-                StartCoroutine("Respawn");
-                //GameControllerFire.Instance.Death();
+                UpdateHp(-1);
                 break;
         }
     }
 
-    IEnumerator Respawn()
+    void UpdateHp(int value)
     {
-        CanvasController.Instance.FadeOut();
-
-        yield return new WaitForSeconds(0.5f);
-
-        CheckpointController.Instance.Restart();
-        
-
+        GameControllerFire.Instance.UpdateHp(value);
     }
 }
