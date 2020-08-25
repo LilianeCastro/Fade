@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 1920941654081360640}
   - component: {fileID: 5448192854193666187}
   - component: {fileID: 1219148893714099314}
+  - component: {fileID: 907770040236873940}
+  - component: {fileID: 4364359141586832237}
   m_Layer: 8
   m_Name: Platform
   m_TagString: PlatformMovement
@@ -159,6 +161,39 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
+--- !u!50 &907770040236873940
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920941654081360642}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &4364359141586832237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920941654081360642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd8dd1151d8cc541a0f7c69c7ff37ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1920941654262004652
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,8 +270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a8b13f780810e043af7963ea72232e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platform: {fileID: 1920941654081360641}
+  platform: {fileID: 4364359141586832237}
   posPlat:
   - {fileID: 1920941654262004643}
   - {fileID: 1920941653819692582}
+  platformType: 0
   speed: 1
