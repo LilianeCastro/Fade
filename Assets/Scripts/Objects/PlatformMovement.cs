@@ -21,14 +21,6 @@ public class PlatformMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if(other.gameObject.CompareTag("Player"))
-        {
-            print("Player");
-        }
-    }
-
     IEnumerator PlatformMove()
     {
         yield return new WaitForEndOfFrame();
@@ -48,6 +40,7 @@ public class PlatformMovement : MonoBehaviour
     IEnumerator PlatformFall()
     {
         yield return new WaitForEndOfFrame();
+
         _Platform.TryGetComponent(out Rigidbody2D _PlatformRb);
         _PlatformRb.bodyType = RigidbodyType2D.Dynamic;
 
@@ -82,15 +75,20 @@ public class PlatformMovement : MonoBehaviour
 
     public void CollisionDetected(bool isOnCollision)
     {
-        if(isOnCollision)
+        if(platformType.Equals(PlatformType.Fall))
         {
-            StartCoroutine("PlatformFall");
-        }else
-        {
-            print("saiu");
-            StopCoroutine("PlatformFall");
-            StartCoroutine("PlatformFallReturnToOrigin");
+            if (isOnCollision)
+            {
+                StartCoroutine("PlatformFall");
+            }
+            else
+            {
+                print("saiu");
+                StopCoroutine("PlatformFall");
+                StartCoroutine("PlatformFallReturnToOrigin");
+            }
         }
+        
         
     }
 }

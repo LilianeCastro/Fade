@@ -7,7 +7,7 @@ TagManager:
   - Shot
   - PlatformMovement
   - Enemy
-  - BoundDeath
+  - ObjectDamage
   layers:
   - Default
   - TransparentFX
@@ -50,4 +50,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 3915025529
+    locked: 0
+  - name: HUD
+    uniqueID: 2372583751
     locked: 0

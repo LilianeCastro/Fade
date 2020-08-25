@@ -95,7 +95,14 @@ public class Player : MonoBehaviour
         switch(other.gameObject.tag)
         {
             case "PlatformMovement":
+
                 transform.parent = other.transform;
+                break;
+
+            case "ObjectDamage":
+
+                StartCoroutine("Respawn");
+                //GameControllerFire.Instance.Death();
                 break;
         }
     }
@@ -105,9 +112,12 @@ public class Player : MonoBehaviour
         switch (other.gameObject.tag)
         {
             case "PlatformMovement":
+
                 transform.parent = null;
                 break;
         }
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -115,8 +125,21 @@ public class Player : MonoBehaviour
         switch (other.gameObject.tag)
         {
             case "Enemy":
-                GameControllerFire.Instance.Death();
+
+                StartCoroutine("Respawn");
+                //GameControllerFire.Instance.Death();
                 break;
         }
+    }
+
+    IEnumerator Respawn()
+    {
+        CanvasController.Instance.FadeOut();
+
+        yield return new WaitForSeconds(0.5f);
+
+        CheckpointController.Instance.Restart();
+        
+
     }
 }
