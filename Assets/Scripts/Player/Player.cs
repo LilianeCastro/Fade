@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
 
         shotTemp = Instantiate(GameControllerFire.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
         shotTemp.TryGetComponent(out Rigidbody2D shotRb);
-
+       
         shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(delayShot);
@@ -106,6 +106,16 @@ public class Player : MonoBehaviour
         {
             case "PlatformMovement":
                 transform.parent = null;
+                break;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        switch (other.gameObject.tag)
+        {
+            case "Enemy":
+                GameControllerFire.Instance.Death();
                 break;
         }
     }
