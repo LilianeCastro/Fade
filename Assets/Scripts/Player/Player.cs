@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
     {
         cantShot = true;
 
-        shotTemp = Instantiate(GameControllerFire.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
+        shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
         shotTemp.TryGetComponent(out Rigidbody2D shotRb);
        
         shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
@@ -133,9 +133,9 @@ public class Player : MonoBehaviour
     {
         if (value == -1 && !isInvencible)
         {
-            GameControllerFire.Instance.UpdateHp(value);
+            GameController.Instance.UpdateHp(value);
 
-            if(GameControllerFire.Instance.GetCurrentLife() > 0)
+            if(GameController.Instance.GetCurrentLife() > 0)
             {
                 isInvencible = true;
                 StartCoroutine("Invencible", timeInvencible);
@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
         }
         else if(value == 0)
         {
-            GameControllerFire.Instance.UpdateHp(value);
+            GameController.Instance.UpdateHp(value);
         }
         
     }

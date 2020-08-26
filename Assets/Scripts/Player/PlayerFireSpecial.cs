@@ -22,7 +22,7 @@ public class PlayerFireSpecial : MonoBehaviour
         {
             isSpecialUse = true;
 
-            GameObject shotSpecial = Instantiate(GameControllerFire.Instance.shotSpecialPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
+            GameObject shotSpecial = Instantiate(GameController.Instance.shotSpecialPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
             shotSpecial.TryGetComponent(out Rigidbody2D shotRb);
 
             shotRb.AddForce(Vector2.down * speedShot, ForceMode2D.Impulse);

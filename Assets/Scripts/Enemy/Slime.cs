@@ -31,7 +31,7 @@ public class Slime : MonoBehaviour
                 break;
 
             case "Shot":
-                Instantiate(GameControllerFire.Instance.smokePrefab, this.transform.position, this.transform.rotation);
+                Instantiate(GameController.Instance.smokePrefab, this.transform.position, this.transform.rotation);
                 Destroy(other.gameObject);
                 Destroy(this.gameObject);
                 break;

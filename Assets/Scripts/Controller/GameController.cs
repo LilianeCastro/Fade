@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameControllerFire : MonoSingleton<GameControllerFire>
+public class GameController : MonoSingleton<GameController>
 {
     public CameraShaker     _cameraShaker;
 
