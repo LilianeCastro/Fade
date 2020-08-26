@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoSingleton<GameController>
 {
-    public CameraShaker     _cameraShaker;
+    public CameraController _CameraController;
 
     public GameObject       shotPrefab;
     public GameObject       shotSpecialPrefab;
@@ -71,7 +71,7 @@ public class GameController : MonoSingleton<GameController>
 
     private void IsHit()
     {
-        StartCoroutine(_cameraShaker.Shake(.15f, .2f));
+        StartCoroutine(_CameraController.Shake(.5f, .3f));
     }
 
     IEnumerator Respawn()
