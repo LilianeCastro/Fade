@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameControllerFire : MonoSingleton<GameControllerFire>
 {
+    public CameraShaker     _cameraShaker;
+
     public GameObject       shotPrefab;
     public GameObject       shotSpecialPrefab;
     public GameObject       smokePrefab;
@@ -31,6 +33,7 @@ public class GameControllerFire : MonoSingleton<GameControllerFire>
             if (value == -1)
             {
                 lives[currentLife].sprite = lifeSprite[0].sprite;
+                IsHit();
             }
             else
             {
@@ -39,8 +42,14 @@ public class GameControllerFire : MonoSingleton<GameControllerFire>
         }
         else
         {
+            IsHit();
             StartCoroutine("Respawn");
         }
+    }
+
+    public int GetCurrentLife()
+    {
+        return currentLife;
     }
 
     private void ChangeScene(string scene)
@@ -58,6 +67,11 @@ public class GameControllerFire : MonoSingleton<GameControllerFire>
         energyProgress.value = energyProgress.maxValue;
         currentLife = life;
         
+    }
+
+    private void IsHit()
+    {
+        StartCoroutine(_cameraShaker.Shake(.15f, .2f));
     }
 
     IEnumerator Respawn()

@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [Header("Player GameObject")]
     private Rigidbody2D     playerRb;
+    private SpriteRenderer  playerSr;
     public Transform        posSpawn;
     public Transform        groundCheck;
     public LayerMask        layerCheck;
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour
     public bool             isLookLeft;
     public float            speedX;
     public float            forceJump;
+    public float            timeInvencible;
+    private bool            isInvencible;
 
     [Header("Shot Config")]
     public float            shotSpeed;
@@ -28,6 +31,7 @@ public class Player : MonoBehaviour
     {
         directionShot = 1;
         playerRb = GetComponent<Rigidbody2D>();
+        playerSr = GetComponent<SpriteRenderer>();
     }
 
     private void FixedUpdate() {
@@ -113,8 +117,6 @@ public class Player : MonoBehaviour
                 transform.parent = null;
                 break;
         }
-
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -129,6 +131,44 @@ public class Player : MonoBehaviour
 
     void UpdateHp(int value)
     {
-        GameControllerFire.Instance.UpdateHp(value);
+        if (value == -1 && !isInvencible)
+        {
+            GameControllerFire.Instance.UpdateHp(value);
+
+            if(GameControllerFire.Instance.GetCurrentLife() > 0)
+            {
+                isInvencible = true;
+                StartCoroutine("Invencible", timeInvencible);
+
+                playerRb.velocity = Vector2.zero;
+                playerRb.AddForce(Vector2.up * 200);
+            }
+            
+        }
+        else if(value == 0)
+        {
+            GameControllerFire.Instance.UpdateHp(value);
+        }
+        
+    }
+
+    IEnumerator Invencible(float time)
+    {
+        playerSr.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        playerSr.color = Color.clear;
+        yield return new WaitForSeconds(0.1f);
+
+        if(time < 0)
+        {
+            print("entrou");
+            isInvencible = false;
+            playerSr.color = Color.white;
+
+            StopCoroutine("Invencible");
+            yield return null;
+        }
+
+        StartCoroutine("Invencible", time - Time.deltaTime);
     }
 }
