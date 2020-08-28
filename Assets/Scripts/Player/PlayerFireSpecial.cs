@@ -7,6 +7,7 @@ public class PlayerFireSpecial : MonoBehaviour
     public Transform        posSpawnSpecial;
     public float            forcePlayerImpulse;
     public float            speedShot;
+    public float            timeToUseSpecialAgain;
 
     private Rigidbody2D     playerRb;
     private bool            isSpecialUse;
@@ -22,6 +23,8 @@ public class PlayerFireSpecial : MonoBehaviour
         {
             isSpecialUse = true;
 
+            GameController.Instance.UpdateEnergy(-10f);
+
             GameObject shotSpecial = Instantiate(GameController.Instance.shotSpecialPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
             shotSpecial.TryGetComponent(out Rigidbody2D shotRb);
 
@@ -36,7 +39,7 @@ public class PlayerFireSpecial : MonoBehaviour
 
     IEnumerator DelaySpecialToUseAgain()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(timeToUseSpecialAgain);
         isSpecialUse = false;
     }
 }

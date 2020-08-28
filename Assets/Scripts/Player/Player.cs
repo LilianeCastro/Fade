@@ -8,10 +8,12 @@ public class Player : MonoBehaviour
     private Rigidbody2D     playerRb;
     private SpriteRenderer  playerSr;
     public Transform        posSpawn;
-    public Transform        groundCheck;
+    public Transform        groundCheckL;
+    public Transform        groundCheckR;
     public LayerMask        layerCheck;
 
     [Header("Player Config")]
+    public TypePlayer       typePlayer;
     private bool            isGrounded;
     private float           horizontal;
     public bool             isLookLeft;
@@ -35,7 +37,8 @@ public class Player : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.02f, layerCheck);
+        isGrounded = Physics2D.OverlapCircle(groundCheckL.position, 0.02f, layerCheck) ||
+                     Physics2D.OverlapCircle(groundCheckR.position, 0.02f, layerCheck);
     }
 
     private void Update()
@@ -79,57 +82,13 @@ public class Player : MonoBehaviour
         isLookLeft = !isLookLeft;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
-
-    IEnumerator Fire()
+    
+    public bool IsInvencible()
     {
-        cantShot = true;
-
-        shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
-        shotTemp.TryGetComponent(out Rigidbody2D shotRb);
-       
-        shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
-
-        yield return new WaitForSeconds(delayShot);
-
-        cantShot = false;
+        return isInvencible;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        switch(other.gameObject.tag)
-        {
-            case "PlatformMovement":
-
-                transform.parent = other.transform;
-                break;
-
-            case "ObjectDamage":
-                UpdateHp(-1);
-                break;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        switch (other.gameObject.tag)
-        {
-            case "PlatformMovement":
-                transform.parent = null;
-                break;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        switch (other.gameObject.tag)
-        {
-            case "Enemy":
-                UpdateHp(-1);
-                break;
-        }
-    }
-
-    void UpdateHp(int value)
+    public void CurrentHp(int value)
     {
         if (value == -1 && !isInvencible)
         {
@@ -141,7 +100,7 @@ public class Player : MonoBehaviour
                 StartCoroutine("Invencible", timeInvencible);
 
                 playerRb.velocity = Vector2.zero;
-                playerRb.AddForce(Vector2.up * 200);
+                playerRb.AddForce(Vector2.up * 100);
             }
             
         }
@@ -170,5 +129,67 @@ public class Player : MonoBehaviour
         }
 
         StartCoroutine("Invencible", time - Time.deltaTime);
+    }
+
+    IEnumerator Fire()
+    {
+        cantShot = true;
+
+        GameController.Instance.UpdateEnergy(-5f);
+
+        shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
+        shotTemp.TryGetComponent(out Rigidbody2D shotRb);
+       
+        shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(delayShot);
+
+        cantShot = false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        switch(other.gameObject.tag)
+        {
+            case "PlatformMovement":
+
+                transform.parent = other.transform;
+                break;
+
+            case "ObjectDamage":
+                StartCoroutine("IsInDamage");  
+                break;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        
+        switch (other.gameObject.tag)
+        {
+            case "PlatformMovement":
+                transform.parent = null;
+                break;
+            case "ObjectDamage":
+                StopCoroutine("IsInDamage");
+                break;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        switch (other.gameObject.tag)
+        {
+            case "Enemy":
+                CurrentHp(-1);
+                break;
+        }
+    }
+
+    IEnumerator IsInDamage()
+    {
+        yield return new WaitForSeconds(1f);
+        CurrentHp(-1);
+        StartCoroutine("IsInDamage");
     }
 }

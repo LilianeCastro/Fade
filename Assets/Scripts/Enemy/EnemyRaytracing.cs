@@ -2,52 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode] //Para o raycast aparecer, tem que colocar o Debug.drawray no update, que so aparece se tiver no update
 public class EnemyRaytracing : MonoBehaviour
 {
     [Header("Ray")]
-    public float distance;
-    public float dirX;
-    public float dirYUp;
-    public float dirYDown;
-    public float speedRay;
+    public float            distance;
+    public float            dirX;
+    public float            dirYUp;
+    public float            dirYDown;
+    public float            speedRay;
+    public Vector2          OriginPos;
 
-    private float dirY;
-    private bool isRaycastCollider;
+    private float           dirY;
+    private bool            isRaycastCollider;
     
     [Header("Lights")]
-    //public GameObject Light;
     public UnityEngine.Experimental.Rendering.Universal.Light2D Light;
-    public GameObject LightTransform;
-    public float speedLight;
-    public float dirZUp;
-    public float dirZDown;
+    public GameObject       LightTransform;
+    public float            speedLight;
+    public float            dirZUp;
+    public float            dirZDown;
 
-    private float dirZ;
+    private float           dirZ;
+    private Vector2         origin;
+    
+    private bool            isColliding;
 
-    public float dirZs;
+    private Player          _Player;
 
     void OnEnable()
     {
-        Light = GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>();
+        _Player = GameObject.Find("PlayerFire").GetComponent<Player>();
+        //Light = GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>();
 
         dirY = dirYUp;
         dirZ = dirZUp;
 
         StartCoroutine("MoveToUp");
+        
     }
     
     void Update()
     {
-        //isRaycastCollider = Physics2D.Raycast(transform.position, Vector2.left, distance, 1 << LayerMask.NameToLayer("Player"));
-        isRaycastCollider = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + 0.25f), new Vector3(dirX, dirY, dirZs), distance, 1 << LayerMask.NameToLayer("Player"));
+        origin = new Vector2(transform.position.x + OriginPos.x, transform.position.y + OriginPos.y);
 
-        if(isRaycastCollider)
+        isRaycastCollider = Physics2D.Raycast(origin, new Vector3(dirX, dirY), distance, 1 << LayerMask.NameToLayer("Player")) ||
+        Physics2D.Raycast(origin, new Vector3(dirX, dirY - 0.2f), distance, 1 << LayerMask.NameToLayer("Player"));
+
+        if(isRaycastCollider && !_Player.IsInvencible())
         {
-            print("------");
+            _Player.CurrentHp(-1);
         }
+        
 
-        //Debug.DrawRay(transform.position, Vector2.left * distance, isRaycastCollider ? Color.yellow : Color.red);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + 0.25f), new Vector3(dirX, dirY, dirZs) * distance, isRaycastCollider ? Color.yellow : Color.red);
+        Debug.DrawRay(origin, new Vector3(dirX, dirY) * distance, isRaycastCollider ? Color.yellow : Color.red);
+        Debug.DrawRay(origin, new Vector3(dirX, dirY - 0.2f) * distance, isRaycastCollider ? Color.yellow : Color.red);
+
     }
 
     IEnumerator MoveToDown()
@@ -56,7 +66,14 @@ public class EnemyRaytracing : MonoBehaviour
         
         dirY -= speedRay * Time.deltaTime;
 
-        dirZ += speedLight * Time.deltaTime;
+        if(dirX < 0)
+        {
+            dirZ += speedLight * Time.deltaTime;
+        }
+        else{
+            dirZ -= speedLight * Time.deltaTime;
+        }
+        
         LightTransform.transform.localRotation = Quaternion.Euler(0, 0, dirZ);
 
         if(dirY <= dirYDown)
@@ -74,7 +91,13 @@ public class EnemyRaytracing : MonoBehaviour
         
         dirY += speedRay * Time.deltaTime;
 
-        dirZ -= speedLight * Time.deltaTime;
+        if(dirX < 0)
+        {
+            dirZ -= speedLight * Time.deltaTime;
+        }
+        else{
+            dirZ += speedLight * Time.deltaTime;
+        }
         LightTransform.transform.localRotation = Quaternion.Euler(0, 0, dirZ);
 
         if(dirY >= dirYUp)

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameController : MonoSingleton<GameController>
 {
     public CameraController _CameraController;
+    public Player           _Player;
 
     public GameObject       shotPrefab;
     public GameObject       shotSpecialPrefab;
@@ -17,7 +18,6 @@ public class GameController : MonoSingleton<GameController>
 
     private int             life;
     private int             currentLife;
-
     void Start()
     {
         life = 3;
@@ -26,6 +26,7 @@ public class GameController : MonoSingleton<GameController>
 
     public void UpdateHp(int value)
     {
+        
         currentLife += value;
 
         if (currentLife > 0)
@@ -40,7 +41,7 @@ public class GameController : MonoSingleton<GameController>
                 lives[currentLife].sprite = lifeSprite[1].sprite;
             }
         }
-        else
+        else if (currentLife == 0)
         {
             IsHit();
             StartCoroutine("Respawn");
@@ -68,6 +69,17 @@ public class GameController : MonoSingleton<GameController>
         currentLife = life;
         
     }
+
+    public void UpdateEnergy(float value)
+    {
+        energyProgress.value += value;
+    }
+
+    public float GetEnergyValue()
+    {
+        return energyProgress.value;
+    }
+
 
     private void IsHit()
     {

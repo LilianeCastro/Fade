@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TypePlayer {Fire, Water};
+
 public class GameManager : MonoSingleton<GameManager>
 {
     private float           sfxVol;

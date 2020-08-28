@@ -8,6 +8,7 @@ TagManager:
   - PlatformMovement
   - Enemy
   - ObjectDamage
+  - Recovery
   layers:
   - Default
   - TransparentFX
