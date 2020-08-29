@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     [Header("Player GameObject")]
     private Rigidbody2D     playerRb;
     private SpriteRenderer  playerSr;
+    private Animator        playerAnim;
     public Transform        posSpawn;
     public Transform        groundCheckL;
     public Transform        groundCheckR;
@@ -36,6 +37,7 @@ public class Player : MonoBehaviour
         directionShot = 1;
         playerRb = GetComponent<Rigidbody2D>();
         playerSr = GetComponent<SpriteRenderer>();
+        playerAnim = GetComponent<Animator>();
     }
 
     private void FixedUpdate() {
@@ -69,7 +71,18 @@ public class Player : MonoBehaviour
             Flip();
             directionShot = -1;
         }
+        if(horizontal != 0)
+        {
+            playerAnim.SetBool("isWalking", true);
+        }
+        else
+        {
+            playerAnim.SetBool("isWalking", false);
+        }
         
+        playerAnim.SetBool("isGrounded", isGrounded);
+        print(playerRb.velocity.y);
+        playerAnim.SetFloat("speedY", playerRb.velocity.y);
     }
 
     private void Jump()
@@ -110,6 +123,11 @@ public class Player : MonoBehaviour
             GameController.Instance.UpdateHp(value);
         }
         
+    }
+
+    public bool IsPlayerHasKey()
+    {
+        return isGetKey;
     }
 
     IEnumerator Invencible(float time)
@@ -192,13 +210,14 @@ public class Player : MonoBehaviour
                 isGetKey = true;
                 Destroy(other.gameObject);
                 break;
-            case "Door":
+            case "Heart":
+                GameController.Instance.UpdateHp(1);
+                break;
+            case "ChangeScene":
                 if(isGetKey)
                 {
                     GameController.Instance.UpdateKey(0);
                 }
-                
-
                 break;
         }
     }

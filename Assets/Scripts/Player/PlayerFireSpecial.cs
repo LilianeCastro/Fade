@@ -31,7 +31,7 @@ public class PlayerFireSpecial : MonoBehaviour
             shotRb.AddForce(Vector2.down * speedShot, ForceMode2D.Impulse);
 
             playerRb.velocity = Vector2.zero;
-            playerRb.AddForce(Vector2.up * forcePlayerImpulse, ForceMode2D.Force);
+            playerRb.AddForce(Vector2.up * forcePlayerImpulse);
 
             StartCoroutine("DelaySpecialToUseAgain");
         }

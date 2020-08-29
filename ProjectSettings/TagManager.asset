@@ -11,6 +11,8 @@ TagManager:
   - Recovery
   - Key
   - Door
+  - Heart
+  - ChangeScene
   layers:
   - Default
   - TransparentFX
