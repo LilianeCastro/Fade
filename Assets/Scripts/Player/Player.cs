@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
     private int             directionShot;
     private GameObject      shotTemp;
 
+    private bool            isGetKey;
+
     private void Start()
     {
         directionShot = 1;
@@ -120,7 +122,6 @@ public class Player : MonoBehaviour
 
         if(time < 0)
         {
-            print("entrou");
             isInvencible = false;
             playerSr.color = Color.white;
 
@@ -134,17 +135,21 @@ public class Player : MonoBehaviour
     IEnumerator Fire()
     {
         cantShot = true;
+        
+        if(GameController.Instance.GetEnergyValue() > 4)
+        {
+            GameController.Instance.UpdateEnergy(-5f);
 
-        GameController.Instance.UpdateEnergy(-5f);
+            shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
+            shotTemp.TryGetComponent(out Rigidbody2D shotRb);
+        
+            shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
 
-        shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
-        shotTemp.TryGetComponent(out Rigidbody2D shotRb);
-       
-        shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
+            yield return new WaitForSeconds(delayShot);
 
-        yield return new WaitForSeconds(delayShot);
-
-        cantShot = false;
+            cantShot = false;
+        }
+        
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -152,11 +157,11 @@ public class Player : MonoBehaviour
         switch(other.gameObject.tag)
         {
             case "PlatformMovement":
-
                 transform.parent = other.transform;
                 break;
 
             case "ObjectDamage":
+                CurrentHp(-1);
                 StartCoroutine("IsInDamage");  
                 break;
         }
@@ -182,6 +187,19 @@ public class Player : MonoBehaviour
         {
             case "Enemy":
                 CurrentHp(-1);
+                break;
+            case "Key":
+                GameController.Instance.UpdateKey(1);
+                isGetKey = true;
+                Destroy(other.gameObject);
+                break;
+            case "Door":
+                if(isGetKey)
+                {
+                    GameController.Instance.UpdateKey(0);
+                }
+                
+
                 break;
         }
     }

@@ -19,8 +19,9 @@ public class PlayerFireSpecial : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetButtonDown("Fire2") && !isSpecialUse)
+        if(Input.GetButtonDown("Fire2") && !isSpecialUse && GameController.Instance.GetEnergyValue() > 9)
         {
+            print(GameController.Instance.GetEnergyValue());
             isSpecialUse = true;
 
             GameController.Instance.UpdateEnergy(-10f);
@@ -40,6 +41,7 @@ public class PlayerFireSpecial : MonoBehaviour
     IEnumerator DelaySpecialToUseAgain()
     {
         yield return new WaitForSeconds(timeToUseSpecialAgain);
+        print("Entrou no especial delay");
         isSpecialUse = false;
     }
 }

@@ -16,12 +16,31 @@ public class GameController : MonoSingleton<GameController>
     public Image[]          lives;
     public Image[]          lifeSprite;
 
+    public Image            keyHUD;
+    public Image[]          keySprite;
+
     private int             life;
     private int             currentLife;
+    private float           energyValue;
+
     void Start()
     {
         life = 3;
         currentLife = life;
+        energyValue = energyProgress.maxValue;
+    }
+
+    public void UpdateKey(int value)
+    {
+        if(value == 1)
+        {
+            keyHUD.sprite = keySprite[1].sprite;
+        }
+        else
+        {
+            keyHUD.sprite = keySprite[0].sprite;
+            MenuManager.Instance.SceneToLoad("WaterStage02");
+        }
     }
 
     public void UpdateHp(int value)
@@ -73,11 +92,12 @@ public class GameController : MonoSingleton<GameController>
     public void UpdateEnergy(float value)
     {
         energyProgress.value += value;
+        print(energyProgress.value);
     }
 
     public float GetEnergyValue()
     {
-        return energyProgress.value;
+        return energyValue;
     }
 
 

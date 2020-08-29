@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - ObjectDamage
   - Recovery
+  - Key
+  - Door
   layers:
   - Default
   - TransparentFX

@@ -5886,7 +5886,7 @@ MonoBehaviour:
   posSpawnSpecial: {fileID: 1488375765}
   forcePlayerImpulse: 700
   speedShot: 1
-  timeToUseSpecialAgain: 1
+  timeToUseSpecialAgain: 0
 --- !u!1 &1863468066
 GameObject:
   m_ObjectHideFlags: 0
