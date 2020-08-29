@@ -21,13 +21,13 @@ public class RecoveryEnergy : MonoBehaviour
         }
     }
 
-    IEnumerator FillEnergy()
+    IEnumerator FillEnergyFire()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
 
         GameController.Instance.UpdateEnergy(0.1f);
 
-        StartCoroutine("FillEnergy");
+        StartCoroutine("FillEnergyFire");
     }
 
     private void CheckValuesToUpdateFill(Collider2D other, bool canFill)
@@ -35,11 +35,11 @@ public class RecoveryEnergy : MonoBehaviour
         other.gameObject.TryGetComponent(out Player _Player);
         if(_Player.typePlayer.Equals(TypePlayer.Fire) && canFill)
         {
-            StartCoroutine("FillEnergy");
+            StartCoroutine("FillEnergyFire");
         }
         else if(_Player.typePlayer.Equals(TypePlayer.Fire) && !canFill)
         {
-            StopCoroutine("FillEnergy");
+            StopCoroutine("FillEnergyFire");
         }
     }
 }

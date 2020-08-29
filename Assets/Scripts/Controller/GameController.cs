@@ -97,7 +97,7 @@ public class GameController : MonoSingleton<GameController>
 
     public float GetEnergyValue()
     {
-        return energyValue;
+        return energyProgress.value;
     }
 
 

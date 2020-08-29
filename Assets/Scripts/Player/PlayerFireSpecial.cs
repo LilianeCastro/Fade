@@ -19,9 +19,8 @@ public class PlayerFireSpecial : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetButtonDown("Fire2") && !isSpecialUse && GameController.Instance.GetEnergyValue() > 9)
+        if(Input.GetButtonDown("Fire2") && !isSpecialUse && GameController.Instance.GetEnergyValue() > 9f)
         {
-            print(GameController.Instance.GetEnergyValue());
             isSpecialUse = true;
 
             GameController.Instance.UpdateEnergy(-10f);

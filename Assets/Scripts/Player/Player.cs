@@ -57,7 +57,6 @@ public class Player : MonoBehaviour
         if(Input.GetButtonUp("Fire1") && !cantShot)
         {
             StartCoroutine("Fire");
-            Fire();
         }
 
         if(horizontal > 0 && isLookLeft)
@@ -135,20 +134,20 @@ public class Player : MonoBehaviour
     IEnumerator Fire()
     {
         cantShot = true;
-        
-        if(GameController.Instance.GetEnergyValue() > 4)
-        {
+
+        if(GameController.Instance.GetEnergyValue() >= 4)
+        {      
             GameController.Instance.UpdateEnergy(-5f);
 
             shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
             shotTemp.TryGetComponent(out Rigidbody2D shotRb);
         
             shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
-
-            yield return new WaitForSeconds(delayShot);
-
-            cantShot = false;
         }
+        
+        yield return new WaitForSeconds(delayShot);
+
+        cantShot = false;
         
     }
 
