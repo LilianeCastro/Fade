@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/FireStage01.unity
     guid: 2973c005122987746af65e30f4b96178
   - enabled: 1
+    path: Assets/Scenes/WaterStage02.unity
+    guid: 3bbd4d75b08acd04fbd4b8cd5aa2b462
+  - enabled: 1
     path: Assets/Scenes/FireStage03.unity
     guid: b45a4000c27a74c4592b3730efd62a9f
   - enabled: 1

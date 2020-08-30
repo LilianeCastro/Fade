@@ -43,7 +43,7 @@ public class GameController : MonoSingleton<GameController>
             switch(MenuManager.Instance.GetSceneName())
             {
                 case "FireStage01":
-                    MenuManager.Instance.SceneToLoad("FireStage03");
+                    MenuManager.Instance.SceneToLoad("WaterStage02");
                     break;
                 case "WaterStage02":
                     MenuManager.Instance.SceneToLoad("FireStage03");

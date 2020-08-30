@@ -83,7 +83,6 @@ public class PlatformMovement : MonoBehaviour
             }
             else
             {
-                print("saiu");
                 StopCoroutine("PlatformFall");
                 StartCoroutine("PlatformFallReturnToOrigin");
             }

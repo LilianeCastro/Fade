@@ -81,7 +81,6 @@ public class Player : MonoBehaviour
         }
         
         playerAnim.SetBool("isGrounded", isGrounded);
-        print(playerRb.velocity.y);
         playerAnim.SetFloat("speedY", playerRb.velocity.y);
     }
 

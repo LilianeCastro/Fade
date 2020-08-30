@@ -32,7 +32,14 @@ public class EnemyRaytracing : MonoBehaviour
 
     void OnEnable()
     {
-        _Player = GameObject.Find("PlayerFire").GetComponent<Player>();
+        if(GameObject.Find("PlayerFire")==null)
+        {
+            _Player = GameObject.Find("PlayerWater").GetComponent<Player>();
+        }else
+        {
+            _Player = GameObject.Find("PlayerFire").GetComponent<Player>();
+        }
+        
         //Light = GetComponent<UnityEngine.Experimental.Rendering.Universal.Light2D>();
 
         dirY = dirYUp;
