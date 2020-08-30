@@ -87,7 +87,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        playerRb.velocity = Vector2.zero;
+        SoundManager.Instance.playFx(2);
+        playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
         playerRb.AddForce(Vector2.up * forceJump);
     }
 
@@ -154,8 +155,11 @@ public class Player : MonoBehaviour
         cantShot = true;
 
         if(GameController.Instance.GetEnergyValue() >= 4)
-        {      
+        {     
+            playerAnim.SetLayerWeight(1, 1);  
             GameController.Instance.UpdateEnergy(-5f);
+
+            SoundManager.Instance.playFx(1);
 
             shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
             shotTemp.TryGetComponent(out Rigidbody2D shotRb);
@@ -164,6 +168,9 @@ public class Player : MonoBehaviour
         }
         
         yield return new WaitForSeconds(delayShot);
+
+        playerAnim.SetLayerWeight(1, 0); 
+        playerAnim.SetLayerWeight(0, 1); 
 
         cantShot = false;
         

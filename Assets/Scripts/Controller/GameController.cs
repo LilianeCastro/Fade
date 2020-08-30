@@ -39,7 +39,21 @@ public class GameController : MonoSingleton<GameController>
         else
         {
             keyHUD.sprite = keySprite[0].sprite;
-            MenuManager.Instance.SceneToLoad("WaterStage02");
+
+            switch(MenuManager.Instance.GetSceneName())
+            {
+                case "FireStage01":
+                    MenuManager.Instance.SceneToLoad("FireStage03");
+                    break;
+                case "WaterStage02":
+                    MenuManager.Instance.SceneToLoad("FireStage03");
+                    break;
+                case "FireStage03":
+                    MenuManager.Instance.SceneToLoad("FinalGame");
+                    break;
+            }
+
+            
         }
     }
 
@@ -52,6 +66,8 @@ public class GameController : MonoSingleton<GameController>
         {
             if (value == -1)
             {
+                SoundManager.Instance.playFx(3);
+                
                 lives[currentLife].sprite = lifeSprite[0].sprite;
                 IsHit();
             }

@@ -16,4 +16,14 @@ public class MenuManager : MonoSingleton<MenuManager>
     {
         return SceneManager.GetActiveScene().name;
     }
+
+    public void Quit()
+    {
+        /*if (EditorApplication.isPlaying)
+        {
+            EditorApplication.ExitPlaymode();
+        }*/
+
+        Application.Quit();
+    }
 }

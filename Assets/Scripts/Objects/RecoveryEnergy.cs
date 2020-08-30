@@ -25,7 +25,7 @@ public class RecoveryEnergy : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
 
-        GameController.Instance.UpdateEnergy(0.1f);
+        GameController.Instance.UpdateEnergy(0.2f);
 
         StartCoroutine("FillEnergyFire");
     }
