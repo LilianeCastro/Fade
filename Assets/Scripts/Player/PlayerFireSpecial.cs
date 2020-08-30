@@ -30,8 +30,8 @@ public class PlayerFireSpecial : MonoBehaviour
 
             shotRb.AddForce(Vector2.down * speedShot, ForceMode2D.Impulse);
 
-            playerRb.velocity = Vector2.zero;
-            playerRb.AddForce(Vector2.up * forcePlayerImpulse, ForceMode2D.Force);
+            playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
+            playerRb.AddForce(Vector2.up * forcePlayerImpulse);
 
             StartCoroutine("DelaySpecialToUseAgain");
         }
@@ -39,8 +39,8 @@ public class PlayerFireSpecial : MonoBehaviour
 
     IEnumerator DelaySpecialToUseAgain()
     {
+        SoundManager.Instance.playFx(0);
         yield return new WaitForSeconds(timeToUseSpecialAgain);
-        print("Entrou no especial delay");
         isSpecialUse = false;
     }
 }

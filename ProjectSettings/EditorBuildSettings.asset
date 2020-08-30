@@ -6,9 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 5d08d2f22d887d140bf5ff41933a4eef
+  - enabled: 1
+    path: Assets/Scenes/InitialGame.unity
+    guid: 8f6f3961e49fcd446a6ffc281671b0f9
+  - enabled: 1
     path: Assets/Scenes/FireStage01.unity
     guid: 2973c005122987746af65e30f4b96178
   - enabled: 1
-    path: Assets/Scenes/WaterStage02.unity
-    guid: 3bbd4d75b08acd04fbd4b8cd5aa2b462
+    path: Assets/Scenes/FireStage03.unity
+    guid: b45a4000c27a74c4592b3730efd62a9f
+  - enabled: 1
+    path: Assets/Scenes/FinalGame.unity
+    guid: c350fae5ea42f2348b1d7f6219a66b5b
   m_configObjects: {}

@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     [Header("Player GameObject")]
     private Rigidbody2D     playerRb;
     private SpriteRenderer  playerSr;
+    private Animator        playerAnim;
     public Transform        posSpawn;
     public Transform        groundCheckL;
     public Transform        groundCheckR;
@@ -36,6 +37,7 @@ public class Player : MonoBehaviour
         directionShot = 1;
         playerRb = GetComponent<Rigidbody2D>();
         playerSr = GetComponent<SpriteRenderer>();
+        playerAnim = GetComponent<Animator>();
     }
 
     private void FixedUpdate() {
@@ -69,12 +71,24 @@ public class Player : MonoBehaviour
             Flip();
             directionShot = -1;
         }
+        if(horizontal != 0)
+        {
+            playerAnim.SetBool("isWalking", true);
+        }
+        else
+        {
+            playerAnim.SetBool("isWalking", false);
+        }
         
+        playerAnim.SetBool("isGrounded", isGrounded);
+        print(playerRb.velocity.y);
+        playerAnim.SetFloat("speedY", playerRb.velocity.y);
     }
 
     private void Jump()
     {
-        playerRb.velocity = Vector2.zero;
+        SoundManager.Instance.playFx(2);
+        playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
         playerRb.AddForce(Vector2.up * forceJump);
     }
 
@@ -112,6 +126,11 @@ public class Player : MonoBehaviour
         
     }
 
+    public bool IsPlayerHasKey()
+    {
+        return isGetKey;
+    }
+
     IEnumerator Invencible(float time)
     {
         playerSr.color = Color.white;
@@ -136,8 +155,11 @@ public class Player : MonoBehaviour
         cantShot = true;
 
         if(GameController.Instance.GetEnergyValue() >= 4)
-        {      
+        {     
+            playerAnim.SetLayerWeight(1, 1);  
             GameController.Instance.UpdateEnergy(-5f);
+
+            SoundManager.Instance.playFx(1);
 
             shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
             shotTemp.TryGetComponent(out Rigidbody2D shotRb);
@@ -146,6 +168,9 @@ public class Player : MonoBehaviour
         }
         
         yield return new WaitForSeconds(delayShot);
+
+        playerAnim.SetLayerWeight(1, 0); 
+        playerAnim.SetLayerWeight(0, 1); 
 
         cantShot = false;
         
@@ -192,13 +217,14 @@ public class Player : MonoBehaviour
                 isGetKey = true;
                 Destroy(other.gameObject);
                 break;
-            case "Door":
+            case "Heart":
+                GameController.Instance.UpdateHp(1);
+                break;
+            case "ChangeScene":
                 if(isGetKey)
                 {
                     GameController.Instance.UpdateKey(0);
                 }
-                
-
                 break;
         }
     }
