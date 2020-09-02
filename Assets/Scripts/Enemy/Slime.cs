@@ -32,6 +32,7 @@ public class Slime : MonoBehaviour
 
             case "Shot":
                 Instantiate(GameController.Instance.smokePrefab, this.transform.position, this.transform.rotation);
+                SoundManager.Instance.playFx(4);
                 Destroy(other.gameObject);
                 Destroy(this.gameObject);
                 break;

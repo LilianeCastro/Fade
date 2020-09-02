@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class GameController : MonoSingleton<GameController>
 {
     public CameraController _CameraController;
-    public Player           _Player;
 
     public GameObject       shotPrefab;
     public GameObject       shotSpecialPrefab;

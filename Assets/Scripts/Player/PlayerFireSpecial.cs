@@ -28,8 +28,6 @@ public class PlayerFireSpecial : MonoBehaviour
             GameObject shotSpecial = Instantiate(GameController.Instance.shotSpecialPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
             shotSpecial.TryGetComponent(out Rigidbody2D shotRb);
 
-            shotRb.AddForce(Vector2.down * speedShot, ForceMode2D.Impulse);
-
             playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
             playerRb.AddForce(Vector2.up * forcePlayerImpulse);
 

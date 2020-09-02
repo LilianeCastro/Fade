@@ -174,9 +174,9 @@ TextureImporter:
       name: HUD_1
       rect:
         serializedVersion: 2
-        x: 15
+        x: 18
         y: 48
-        width: 113
+        width: 110
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -237,9 +237,9 @@ TextureImporter:
       name: HUD_4
       rect:
         serializedVersion: 2
-        x: 18
+        x: 16
         y: 16
-        width: 107
+        width: 112
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
