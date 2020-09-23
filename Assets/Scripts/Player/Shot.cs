@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.PlayerLoop;
+﻿using UnityEngine;
 
 public class Shot : MonoBehaviour
 {
-    private void OnEnable()
+    private void OnBecameInvisible() 
     {
-        Destroy(this.gameObject, 5f);
+        Destroy(this.gameObject);
     }
 }

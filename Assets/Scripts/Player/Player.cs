@@ -15,26 +15,40 @@ public class Player : MonoBehaviour
 
     [Header("Player Config")]
     public TypePlayer       typePlayer;
-    private bool            isGrounded;
-    private float           horizontal;
     public bool             isLookLeft;
     public float            speedX;
     public float            forceJump;
     public float            timeInvencible;
+    private int             extraJump;
+    private int             currentJump;
+    private bool            canExtraJump;
+    private bool            canSwim;
+    private bool            isGrounded;
     private bool            isInvencible;
+    private float           horizontal;
 
     [Header("Shot Config")]
     public float            shotSpeed;
     public float            delayShot;
     private bool            cantShot;
-    private int             directionShot;
     private GameObject      shotTemp;
 
     private bool            isGetKey;
 
     private void Start()
     {
-        directionShot = 1;
+        if(typePlayer.Equals(TypePlayer.Fire))
+        {
+            extraJump = 1;    
+        }
+        else
+        {
+            extraJump = 0;
+            canSwim = true;
+        }
+
+        currentJump = 0;
+
         playerRb = GetComponent<Rigidbody2D>();
         playerSr = GetComponent<SpriteRenderer>();
         playerAnim = GetComponent<Animator>();
@@ -43,6 +57,17 @@ public class Player : MonoBehaviour
     private void FixedUpdate() {
         isGrounded = Physics2D.OverlapCircle(groundCheckL.position, 0.02f, layerCheck) ||
                      Physics2D.OverlapCircle(groundCheckR.position, 0.02f, layerCheck);
+        
+        if(isGrounded)
+        {
+            currentJump = 0;
+        }
+
+        if(Input.GetButtonDown("Jump") && (isGrounded || currentJump < extraJump))
+        {
+            Jump();
+        }
+
     }
 
     private void Update()
@@ -50,11 +75,6 @@ public class Player : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
 
         playerRb.velocity = new Vector2(horizontal * speedX, playerRb.velocity.y);
-
-        if(Input.GetButtonDown("Jump") && isGrounded)
-        {
-            Jump();
-        }
 
         if(Input.GetButtonUp("Fire1") && !cantShot)
         {
@@ -64,12 +84,12 @@ public class Player : MonoBehaviour
         if(horizontal > 0 && isLookLeft)
         {
             Flip();
-            directionShot = 1;
+
         }
         else if(horizontal < 0 && !isLookLeft)
         {
             Flip();
-            directionShot = -1;
+            
         }
         if(horizontal != 0)
         {
@@ -89,11 +109,22 @@ public class Player : MonoBehaviour
         SoundManager.Instance.playFx(2);
         playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
         playerRb.AddForce(Vector2.up * forceJump);
+
+        if(typePlayer.Equals(TypePlayer.Fire))
+        {
+            currentJump++;
+        }
+        else
+        {
+            currentJump = extraJump;
+        }
+        
     }
 
     void Flip()
     {
         isLookLeft = !isLookLeft;
+        shotSpeed *= -1;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
     }
     
@@ -115,14 +146,12 @@ public class Player : MonoBehaviour
 
                 playerRb.velocity = Vector2.zero;
                 playerRb.AddForce(Vector2.up * 100);
-            }
-            
+            } 
         }
         else if(value == 0)
         {
             GameController.Instance.UpdateHp(value);
-        }
-        
+        }   
     }
 
     public bool IsPlayerHasKey()
@@ -145,7 +174,6 @@ public class Player : MonoBehaviour
             StopCoroutine("Invencible");
             yield return null;
         }
-
         StartCoroutine("Invencible", time - Time.deltaTime);
     }
 
@@ -163,7 +191,7 @@ public class Player : MonoBehaviour
             shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
             shotTemp.TryGetComponent(out Rigidbody2D shotRb);
         
-            shotRb.AddForce(Vector2.right * shotSpeed * directionShot, ForceMode2D.Impulse);
+            shotRb.AddForce(Vector2.right * shotSpeed, ForceMode2D.Impulse);
         }
         
         yield return new WaitForSeconds(delayShot);
@@ -172,7 +200,6 @@ public class Player : MonoBehaviour
         playerAnim.SetLayerWeight(0, 1); 
 
         cantShot = false;
-        
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -191,8 +218,7 @@ public class Player : MonoBehaviour
     }
 
     private void OnCollisionExit2D(Collision2D other)
-    {
-        
+    {  
         switch (other.gameObject.tag)
         {
             case "PlatformMovement":

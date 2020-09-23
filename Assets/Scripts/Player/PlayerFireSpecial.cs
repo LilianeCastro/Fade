@@ -17,7 +17,7 @@ public class PlayerFireSpecial : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(Input.GetButtonDown("Fire2") && !isSpecialUse && GameController.Instance.GetEnergyValue() > 9f)
         {
@@ -26,11 +26,7 @@ public class PlayerFireSpecial : MonoBehaviour
             GameController.Instance.UpdateEnergy(-10f);
 
             GameObject shotSpecial = Instantiate(GameController.Instance.shotSpecialPrefab, posSpawnSpecial.position, posSpawnSpecial.rotation);
-            shotSpecial.TryGetComponent(out Rigidbody2D shotRb);
-
-            playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
-            playerRb.AddForce(Vector2.up * forcePlayerImpulse);
-
+            
             StartCoroutine("DelaySpecialToUseAgain");
         }
     }
