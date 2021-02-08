@@ -3,37 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
-{
+{   
+    private Rigidbody2D    playerRb;
+    private SpriteRenderer playerSr;
+    private Animator       playerAnim;
+
     [Header("Player GameObject")]
-    private Rigidbody2D     playerRb;
-    private SpriteRenderer  playerSr;
-    private Animator        playerAnim;
-    public Transform        posSpawn;
-    public Transform        groundCheckL;
-    public Transform        groundCheckR;
-    public LayerMask        layerCheck;
+    [SerializeField] private Transform posSpawn = default;
+    [SerializeField] private Transform groundCheckL = default;
+    [SerializeField] private Transform groundCheckR = default;
+    [SerializeField] private LayerMask layerCheck = default;
 
     [Header("Player Config")]
-    public TypePlayer       typePlayer;
-    public bool             isLookLeft;
-    public float            speedX;
-    public float            forceJump;
-    public float            timeInvencible;
-    private int             extraJump;
-    private int             currentJump;
-    private bool            canExtraJump;
-    private bool            canSwim;
-    private bool            isGrounded;
-    private bool            isInvencible;
-    private float           horizontal;
+    public TypePlayer typePlayer;
+    [SerializeField] private bool  isLookLeft = false;
+    [SerializeField] private float speedX = 4.0f;
+    [SerializeField] private float forceJump = 500.0f;
+    [SerializeField] private float timeInvencible = 0.2f;
+
+    private int   extraJump;
+    private int   currentJump;
+    private bool  canSwim = false;
+    private bool  isGrounded;
+    private bool  isInvencible;
+    private float horizontal;
 
     [Header("Shot Config")]
-    public float            shotSpeed;
-    public float            delayShot;
-    private bool            cantShot;
-    private GameObject      shotTemp;
+    [SerializeField] private float shotSpeed = 20.0f;
+    [SerializeField] private float delayShot = 0.5f;
+    private bool cantShot;
+    
+    private bool isGetKey;
 
-    private bool            isGetKey;
+    private void Awake()
+    {
+        playerRb = GetComponent<Rigidbody2D>();
+        playerSr = GetComponent<SpriteRenderer>();
+        playerAnim = GetComponent<Animator>();
+    }
 
     private void Start()
     {
@@ -48,10 +55,6 @@ public class Player : MonoBehaviour
         }
 
         currentJump = 0;
-
-        playerRb = GetComponent<Rigidbody2D>();
-        playerSr = GetComponent<SpriteRenderer>();
-        playerAnim = GetComponent<Animator>();
     }
 
     private void FixedUpdate() {
@@ -61,25 +64,30 @@ public class Player : MonoBehaviour
         if(isGrounded)
         {
             currentJump = 0;
-        }
-
-        if(Input.GetButtonDown("Jump") && (isGrounded || currentJump < extraJump))
-        {
-            Jump();
-        }
-
+        } 
     }
 
     private void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        playerRb.velocity = new Vector2(horizontal * speedX, playerRb.velocity.y);
+        Movement();
 
         if(Input.GetButtonUp("Fire1") && !cantShot)
         {
             StartCoroutine("Fire");
         }
+
+        if(Input.GetButtonDown("Jump") && (isGrounded || currentJump < extraJump))
+        {
+            Jump();
+        }
+    
+    }
+
+    private void Movement()
+    {
+        playerRb.velocity = new Vector2(horizontal * speedX, playerRb.velocity.y);
 
         if(horizontal > 0 && isLookLeft)
         {
@@ -102,7 +110,7 @@ public class Player : MonoBehaviour
         
         playerAnim.SetBool("isGrounded", isGrounded);
         playerAnim.SetFloat("speedY", playerRb.velocity.y);
-    }
+    } 
 
     private void Jump()
     {
@@ -117,11 +125,10 @@ public class Player : MonoBehaviour
         else
         {
             currentJump = extraJump;
-        }
-        
+        }    
     }
 
-    void Flip()
+    private void Flip()
     {
         isLookLeft = !isLookLeft;
         shotSpeed *= -1;
@@ -158,49 +165,8 @@ public class Player : MonoBehaviour
     {
         return isGetKey;
     }
-
-    IEnumerator Invencible(float time)
-    {
-        playerSr.color = Color.white;
-        yield return new WaitForSeconds(0.1f);
-        playerSr.color = Color.clear;
-        yield return new WaitForSeconds(0.1f);
-
-        if(time < 0)
-        {
-            isInvencible = false;
-            playerSr.color = Color.white;
-
-            StopCoroutine("Invencible");
-            yield return null;
-        }
-        StartCoroutine("Invencible", time - Time.deltaTime);
-    }
-
-    IEnumerator Fire()
-    {
-        cantShot = true;
-
-        if(GameController.Instance.GetEnergyValue() >= 4)
-        {     
-            playerAnim.SetLayerWeight(1, 1);  
-            GameController.Instance.UpdateEnergy(-5f);
-
-            SoundManager.Instance.playFx(1);
-
-            shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
-            shotTemp.TryGetComponent(out Rigidbody2D shotRb);
-        
-            shotRb.AddForce(Vector2.right * shotSpeed, ForceMode2D.Impulse);
-        }
-        
-        yield return new WaitForSeconds(delayShot);
-
-        playerAnim.SetLayerWeight(1, 0); 
-        playerAnim.SetLayerWeight(0, 1); 
-
-        cantShot = false;
-    }
+  
+    #region Collisions and Triggers
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -253,11 +219,58 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
-    IEnumerator IsInDamage()
+    #region Coroutines
+
+    private IEnumerator IsInDamage()
     {
         yield return new WaitForSeconds(1f);
         CurrentHp(-1);
         StartCoroutine("IsInDamage");
     }
+
+    IEnumerator Invencible(float time)
+    {
+        playerSr.color = Color.white;
+        yield return new WaitForSeconds(0.1f);
+        playerSr.color = Color.clear;
+        yield return new WaitForSeconds(0.1f);
+
+        if(time < 0)
+        {
+            isInvencible = false;
+            playerSr.color = Color.white;
+
+            StopCoroutine("Invencible");
+            yield return null;
+        }
+        StartCoroutine("Invencible", time - Time.deltaTime);
+    }
+
+    private IEnumerator Fire()
+    {
+        cantShot = true;
+
+        if(GameController.Instance.GetEnergyValue() >= 4)
+        {     
+            playerAnim.SetLayerWeight(1, 1);  
+            GameController.Instance.UpdateEnergy(-5f);
+
+            SoundManager.Instance.playFx(1);
+
+            GameObject shotTemp = Instantiate(GameController.Instance.shotPrefab, posSpawn.position, posSpawn.rotation);
+            shotTemp.TryGetComponent(out Rigidbody2D shotRb);
+        
+            shotRb.AddForce(Vector2.right * shotSpeed, ForceMode2D.Impulse);
+        }
+        
+        yield return new WaitForSeconds(delayShot);
+
+        playerAnim.SetLayerWeight(1, 0); 
+        playerAnim.SetLayerWeight(0, 1); 
+
+        cantShot = false;
+    }
+    #endregion
 }
